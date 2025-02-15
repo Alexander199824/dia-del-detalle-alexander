@@ -43,7 +43,7 @@ const CharacterGivingFlowers = () => {
       
       {/* Ramo de flores */}
       <div className="absolute top-6 left-14 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-md">
-        🌸🌼💐
+        🌸🌸🌸🌸🌸
       </div>
 
       {/* Hada */}
@@ -53,7 +53,7 @@ const CharacterGivingFlowers = () => {
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
       >
         <div className="w-12 h-12 bg-pink-400 rounded-full flex items-center justify-center">
-          🧚
+          🧚🧚🧚
         </div>
         <div className="w-16 h-24 bg-purple-400 rounded-lg flex items-center justify-center shadow-md">
           ✨
@@ -79,7 +79,7 @@ export default function DetalleEspecial() {
       <Card className="max-w-xl w-full text-center">
         <CardContent>
           <p className="text-lg text-gray-700 mb-4">
-            Hola Claudia, este detalle es para mostrarte lo especial que eres para mí y lo mucho que valoro conocerte. 😊
+          "¡Hola! Espero que tu estudio vaya bien hoy. Seguro que lo estás haciendo genial. ¡Mucho ánimo!" 😊
           </p>
           <div className="mt-6">
             <Button onClick={handleButtonClick}>
