@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 // Componente Card
 const Card = ({ children, className }) => {
-  return <div className={`bg-white shadow-2xl rounded-3xl p-6 ${className}`}>{children}</div>;
+  return <div className={`bg-white shadow-lg rounded-xl p-6 ${className}`}>{children}</div>;
 };
 
 // Componente CardContent
@@ -11,89 +11,108 @@ const CardContent = ({ children }) => {
   return <div className="p-4">{children}</div>;
 };
 
-// Componente Button
+// Componente Button mejorado
 const Button = ({ onClick, children, className }) => {
   return (
     <button
       onClick={onClick}
-      className={`bg-black text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:bg-gray-800 transition-all ${className}`}
+      className={`bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition-all ${className}`}
     >
       {children}
     </button>
   );
 };
 
-// Componente del muñequito vestido de traje entregando flores a un hada
-const CharacterGivingFlowers = () => {
-  return (
-    <motion.div
-      className="relative w-40 h-40 flex items-center justify-center"
-      animate={{ x: [0, 200, 0], y: [0, -10, 0] }}
-      transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-    >
-      {/* Muñequito con traje */}
-      <div className="relative flex flex-col items-center">
-        <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
-          😊
-        </div>
-        <div className="w-16 h-24 bg-blue-600 rounded-lg flex items-center justify-center shadow-md">
-          🤵
-        </div>
-      </div>
-      
-      {/* Ramo de flores */}
-      <div className="absolute top-6 left-14 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-md">
-        🌸🌸🌸🌸🌸
-      </div>
+// Mensajes y emojis por día de la semana
+const mensajes = {
+  0: { texto: "Espero que este domingo te permita recargar energías para la semana. ¡Mucho éxito en todo lo que hagas!", emoji: "🌺✨🌴" },
+  1: { texto: "¡Que tengas un lunes productivo y lleno de logros! No olvides que cada día es una nueva oportunidad.", emoji: "👑🌷🚀" },
+  2: { texto: "Martes es un gran día para seguir avanzando. ¡Mucho ánimo y éxito en lo que hagas!", emoji: "🌻🧚‍♂️🌎" },
+  3: { texto: "Miércoles ya estamos a mitad de la semana. ¡Sigue con la misma energía!", emoji: "💐🌟✈️" },
+  4: { texto: "Jueves, un paso más cerca del fin de semana. ¡Que tengas un gran día!", emoji: "🏵️✨🌍" },
+  5: { texto: "¡Feliz viernes! Cierra la semana con éxito y con la satisfacción de haber dado lo mejor.", emoji: "🌹🧚‍♀️🛫" },
+  6: { texto: "Sábado es perfecto para equilibrar trabajo y descanso. ¡Disfruta el día!", emoji: "💮👸🏝️" }
+};
 
-      {/* Hada */}
-      <motion.div 
-        className="absolute top-0 left-40 flex flex-col items-center"
-        animate={{ y: [0, -10, 0] }}
-        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-      >
-        <div className="w-12 h-12 bg-pink-400 rounded-full flex items-center justify-center">
-          🧚🧚🧚
-        </div>
-        <div className="w-16 h-24 bg-purple-400 rounded-lg flex items-center justify-center shadow-md">
-          ✨
-        </div>
-      </motion.div>
-    </motion.div>
+// Lista de palabras mágicas con descripciones
+const palabrasSecretas = {
+  "hada": "Un ser mágico con alas y polvo encantado.",
+  "flor": "Una hermosa creación de la naturaleza con pétalos coloridos.",
+  "corona": "Un símbolo de realeza y grandeza.",
+  "viaje": "Una aventura a un lugar nuevo y emocionante.",
+  "estrella": "Un cuerpo celeste que brilla en el cielo nocturno.",
+  "brillo": "Reflejo de luz que ilumina todo a su alrededor.",
+  "encanto": "Un magnetismo especial que cautiva a todos."
+};
+
+// Mini juego mejorado con funcionalidad adicional
+const MiniJuego = ({ onWin }) => {
+  const [guess, setGuess] = useState("");
+  const [secretWord, setSecretWord] = useState(Object.keys(palabrasSecretas)[Math.floor(Math.random() * Object.keys(palabrasSecretas).length)]);
+  const [winCount, setWinCount] = useState(0);
+  const [attempts, setAttempts] = useState(0);
+  const [hint, setHint] = useState(`Pista: ${palabrasSecretas[secretWord]}`);
+  const [feedback, setFeedback] = useState("");
+
+  const handleCheck = () => {
+    if (guess.toLowerCase() === "claudia") {
+      setFeedback("Eres increíble y especial. Siempre hay algo brillante en tu día. ✨");
+      return;
+    }
+    if (guess.toLowerCase() === secretWord) {
+      setWinCount(winCount + 1);
+      setFeedback("¡Felicidades! Has acertado 🎉");
+      const newWord = Object.keys(palabrasSecretas)[Math.floor(Math.random() * Object.keys(palabrasSecretas).length)];
+      setSecretWord(newWord);
+      setHint(`Pista: ${palabrasSecretas[newWord]}`);
+      onWin(winCount + 1);
+      setGuess("");
+      setAttempts(0);
+    } else {
+      setAttempts(attempts + 1);
+      setFeedback("Casi lo aciertas, inténtalo de nuevo. ¡Seguro lo lograrás! 🔄");
+      if (attempts < secretWord.length) {
+        setHint(`La palabra empieza con: ${secretWord.substring(0, attempts + 1)}. Pista: ${palabrasSecretas[secretWord]}`);
+      }
+    }
+  };
+
+  return (
+    <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow-md">
+      <p className="text-gray-700 font-semibold">Adivina la palabra mágica:</p>
+      <p className="text-sm text-gray-600">{hint}</p>
+      <input 
+        type="text" 
+        className="border p-2 rounded-md mt-2 w-full" 
+        value={guess} 
+        onChange={(e) => setGuess(e.target.value)}
+      />
+      <Button onClick={handleCheck} className="mt-3">Comprobar</Button>
+      {feedback && <p className="mt-2 text-blue-600">{feedback}</p>}
+    </div>
   );
 };
 
 // Componente principal
 export default function DetalleEspecial() {
-  const [showMessage, setShowMessage] = useState(false);
-  
-  const handleButtonClick = () => {
-    setShowMessage(true);
-  };
+  const [showGame, setShowGame] = useState(false);
+  const today = new Date().getDay();
+  const mensajeDelDia = mensajes[today];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-rose-200 p-4">
-      <h2 className="text-4xl font-semibold text-gray-900 mb-4 text-center">
-        Hola Claudia 🌷
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+      <h2 className="text-4xl font-bold text-center">
+        Hola Claudia {mensajeDelDia.emoji}
       </h2>
-      <Card className="max-w-xl w-full text-center">
+      <Card className="max-w-xl w-full text-center bg-gray-800">
         <CardContent>
-          <p className="text-lg text-gray-700 mb-4">
-          "¡Hola! Espero que tu estudio vaya bien hoy. Seguro que lo estás haciendo genial. ¡Mucho ánimo!" 😊
-          </p>
-          <div className="mt-6">
-            <Button onClick={handleButtonClick}>
-              🌼 Presiona  🌼
-            </Button>
-          </div>
+          <p className="text-lg mb-4">{mensajeDelDia.texto}</p>
+          <Button onClick={() => setShowGame(!showGame)}>
+            {showGame ? "Ocultar juego" : "Jugar de nuevo"}
+          </Button>
         </CardContent>
       </Card>
-      {showMessage && (
-        <div className="flex flex-col items-center mt-8 transition-all duration-1000">
-          <CharacterGivingFlowers />
-        </div>
-      )}
-      <p className="text-xs text-gray-600 mt-10">© Alexander Echeverría</p>
+      {showGame && <MiniJuego onWin={() => setShowGame(false)} />}
     </div>
   );
 }
